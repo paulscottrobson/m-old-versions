@@ -1,6 +1,6 @@
               	; --------------------------------------
               	; zasm: assemble "system.asm"
-              	; date: 2018-08-01 03:06:22
+              	; date: 2018-08-01 21:48:29
               	; --------------------------------------
 
 
@@ -1331,5 +1331,5 @@ word_def__word_73_79_73_2e_69_6e_66_6f    = $812A =  33066          word.asm:326
 word_def__word_78_6f_72                   = $80BA =  32954          word.asm:207 (unused)
 
 
-total time: 0.0042 sec.
+total time: 0.0044 sec.
 no errors

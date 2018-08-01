@@ -1,7 +1,7 @@
 #
 #		Delete files that are created by running this batch file.
 #
-rm asm/*.asm system.bin system.lst system.dictionary core.m13 core.dictionary
+rm asm/*.asm system.bin system.lst core.m13 core.dictionary
 # 
 #		Builds the two assembler files "macro.asm" and "word.asm" from the individual
 # 		word and macro definition
