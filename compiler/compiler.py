@@ -9,6 +9,8 @@
 # ****************************************************************************************
 # ****************************************************************************************
 
+import sys,re
+from exceptions import *
 
 # ****************************************************************************************
 #										Compiler class
@@ -51,22 +53,22 @@ class Compiler(object):
 		originalWord = word 										# save original Word
 
 		if word[0] == ':' and len(word) > 1:						# :definition
-			self.dictionary.add(word[1:].lower(),"w",self.binary.pointer)
+			self.dictionary.add(word[1:].lower(),"word",self.binary.pointer)
 			return
 	
 		# handle normal words
 		entry = self.dictionary.find(word) 							# find entry.
 		if entry is not None:
-			self.generateWordCode(entry["address"],entry["type"],word)
+			if entry.getType() != "variable":
+				self.generateWordCode(entry.getAddress(),entry.getType(),entry.getName())
+			else:
+				self.loadConstant(entry.getAddress())
 			return
 		# variable accessors
-		if word[-1] == '!' or word[-1] == '@' or word[-1] == '&':
+		if word[-1] == '!' or word[-1] == '@':
 			entry = self.dictionary.find(word[:-1])
 			if entry is not None:
-				if word[-1] == '&':
-					self.loadConstant(entry["address"])
-				else:
-					self.variableAccess(word[-1] == '!',entry["address"])
+				self.variableAccess(word[-1] == '!',entry.getAddress())
 				return
 		# decimal constants
 		if re.match("^(\-?[0-9]+)$",word):							# 1234 handles ^
@@ -112,7 +114,8 @@ class Compiler(object):
 			return
 
 		# others
-		if word[:8] == "variable":									# 2 byte variable
+		if word[:9] == "variable:":									# 2 byte variable
+			self.dictionary.add(word[9:].lower(),"variable",self.binary.pointer)		
 			self.binary.write2(0)
 			self.dictionary.makeLastPrivate()
 			return
@@ -180,13 +183,13 @@ class Compiler(object):
 	#		Generate call or macro code
 	#
 	def generateWordCode(self,address,wordType,name):
-		if wordType == "m":											# if macro
-			count = self.binary.readByte(address)					# number of bytes to generate
+		if wordType == "macro":										# if macro
+			count = self.binary.readByte(address+1)					# number of bytes to generate
 			if count == 0 or count > 8:
 				raise CompilerException("Bad macro ? Bad count "+name)
 			for i in range(0,count):								# copy it out
-				self.binary.write(self.binary.readByte(address+i+1))
-		elif wordType == "w":
+				self.binary.write(self.binary.readByte(address+i+5))
+		elif wordType == "word":
 			self.binary.write(0xCD) 								# Z80 CALL
 			self.binary.write2(address)
 		else:

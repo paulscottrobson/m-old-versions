@@ -53,7 +53,7 @@ class VariableDictionaryItem(BaseDictionaryItem):
 # ****************************************************************************************
 
 class Dictionary(object):
-	def __init__(self,source):
+	def __init__(self,source = "core.dictionary"):
 		self.words = {}												# word storage
 		self.source = source
 		for l in [x.strip().lower() for x in open(source).readlines()]:
@@ -93,7 +93,7 @@ class Dictionary(object):
 	#
 	#		Write dictionary file out.
 	#
-	def writeDictionary(self,target):
+	def save(self,target):
 		assert self.source != target,"Cannot write back to original"
 		wordList = self.getAllWordNames()
 		h = open(target,"w")
@@ -120,4 +120,4 @@ if __name__ == '__main__':
 	print(dict.find("VAR").toString())
 	print(dict.find("imm").toString())
 
-	dict.writeDictionary("test.dictionary")
+	dict.save("test.dictionary")

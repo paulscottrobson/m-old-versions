@@ -16,7 +16,7 @@ from dictionary import *
 # ****************************************************************************************
 
 class M13Binary(object):
-	def __init__(self,source,dictionary):
+	def __init__(self,dictionary,source="core.m13"):
 		self.loadAddress = 0x5B00 									# binary starts here
 		self.source = source
 		self.memory = [ 0x00 ] * 0x10000							# memory representation
@@ -70,7 +70,7 @@ class M13Binary(object):
 
 if __name__ == '__main__':
 	dict = Dictionary("core.dictionary")
-	bin = M13Binary("core.m13",dict)
+	bin = M13Binary(dict,"core.m13")
 	bin.save("test.m13",dict)
 	print("{0:04x}".format(bin.sysInfo))
 

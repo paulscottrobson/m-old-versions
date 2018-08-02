@@ -1,0 +1,7 @@
+
+:main
+
+ testip.load
+ 4 8 editor.edit
+debug halt ;
+
