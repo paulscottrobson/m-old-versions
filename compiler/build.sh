@@ -1,9 +1,6 @@
-cd ../dictionary
+cd ../core.build
 sh build.bat
 cd ../compiler
-rm result.bin result.sna
+rm test.bin test.sna
 python ../compiler/m13c.py
-zasm -bu result.asm
-
-# TODO: Figure out the key reading problem
-	
+zasm -bu __test.asm
