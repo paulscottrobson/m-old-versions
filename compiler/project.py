@@ -9,6 +9,7 @@
 # ****************************************************************************************
 # ****************************************************************************************
 
+import os
 from dictionary import *
 from binary import *
 from compiler import *
@@ -29,7 +30,7 @@ class Project(object):
 		for src in [x for x in sources if x.find("//") < 0]:
 			print("M13:Building "+src)
 			self.compiler.compileFile(src)
-		self.binary.save("test.m13",self.dictionary)
-		self.dictionary.save("test.dictionary")
+		self.binary.save("build"+os.sep+"test.m13",self.dictionary)
+		self.dictionary.save("build"+os.sep+"test.dictionary")
 		print("M13Binary:Completed.")
 

@@ -307,13 +307,6 @@ word_def__word_64_65_62_75_67:
         pop     de
         ret
 
-; ***** edit.buffer *****
-
-word_def__word_65_64_69_74_2e_62_75_66_66_65_72:
-        ex         de,hl
-        ld         hl,editBuffer
-        ret
-
 ; ***** macro.expand *****
 
 word_def__word_6d_61_63_72_6f_2e_65_78_70_61_6e_64:
@@ -400,4 +393,11 @@ word_def__word_6e_6f_74:
         ld         a,l
         cpl
         ld        l,a
+        ret
+
+; ***** edit.buffer *****
+
+word_def__word_65_64_69_74_2e_62_75_66_66_65_72:
+        ex         de,hl
+        ld         hl,editBuffer
         ret
