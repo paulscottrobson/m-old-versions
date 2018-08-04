@@ -1,6 +1,8 @@
 //
 //	Demo project
 //
+output=test
+
 console.source
 editor.source
 testinput.source

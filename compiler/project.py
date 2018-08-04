@@ -26,11 +26,21 @@ class Project(object):
 		self.dictionary = Dictionary("core.dictionary")
 		self.binary = M13Binary(self.dictionary,"core.m13")
 		self.compiler = Compiler(self.binary,self.dictionary)
-		sources = [x.strip() for x in open(self.projectFile).readlines() if x.strip() != ""]
-		for src in [x for x in sources if x.find("//") < 0]:
+
+		sources = [x.strip().lower() for x in open(self.projectFile).readlines() if x.strip() != ""]
+		target = None
+		for src in [x for x in sources if x.find("//") < 0 and x.find("=") >= 0]:
+			equ = [x.strip() for x in src.split("=") if x.strip() != ""]
+			if equ[0] == "output":
+				target = equ[1]
+
+		for src in [x for x in sources if x.find("//") < 0 and x.find("=") < 0]:
 			print("M13:Building "+src)
 			self.compiler.compileFile(src)
-		self.binary.save("build"+os.sep+"test.m13",self.dictionary)
-		self.dictionary.save("build"+os.sep+"test.dictionary")
-		print("M13Binary:Completed.")
+		if target is None:
+			target = "object"
+
+		self.binary.save("build"+os.sep+target+".m13",self.dictionary)
+		self.dictionary.save("build"+os.sep+target+".dictionary")
+		print("M13Binary:Completed build of "+target+".m13")
 
