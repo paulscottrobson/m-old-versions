@@ -2,7 +2,6 @@
 //			Testing project
 //
 output=test
-
-console.source
+..\m13app\console.source
 demo.source
 

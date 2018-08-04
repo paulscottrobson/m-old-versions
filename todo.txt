@@ -1,0 +1,5 @@
+TODO:
+	Compiler errors break build properly
+	Import dictionary into source
+	VList.
+	Parsing/Finding words in Z80 ASM
