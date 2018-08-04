@@ -1,7 +1,5 @@
 
 :main
-
- testip.load
- 4 8 editor.edit
+	42 con.print.hex
 debug halt ;
 

@@ -71,4 +71,7 @@
 828a::word::con.br
 8291::word::con.getkey
 82a9::word::con.vlist
-82aa::word::main
+82f3::word::editor.clear
+8478::word::editor.edit
+853c::word::testip.load
+8599::word::main

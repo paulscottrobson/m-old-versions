@@ -1,0 +1,10 @@
+//
+//								M13 Application project
+//
+output=m13app
+
+console.source
+editor.source
+testinput.source
+boot.source
+

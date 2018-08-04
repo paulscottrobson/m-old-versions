@@ -23,8 +23,8 @@ class Project(object):
 		self.projectFile = projectFile
 
 	def build(self):
-		self.dictionary = Dictionary("core.dictionary")
-		self.binary = M13Binary(self.dictionary,"core.m13")
+		self.dictionary = Dictionary("..\\compiler\\core.dictionary")
+		self.binary = M13Binary(self.dictionary,"..\\compiler\\core.m13")
 		self.compiler = Compiler(self.binary,self.dictionary)
 
 		sources = [x.strip().lower() for x in open(self.projectFile).readlines() if x.strip() != ""]
