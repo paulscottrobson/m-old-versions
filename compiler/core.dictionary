@@ -55,4 +55,6 @@
 8152::word::0-
 815a::word::abs
 8160::word::not
-8167::word::edit.buffer
+8167::word::parse.buffer
+816c::word::parse.fetch
+8170::word::parse.reset

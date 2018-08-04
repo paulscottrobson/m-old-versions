@@ -1,13 +1,16 @@
 ; *******************************************************************************
 ; *******************************************************************************
 ;
-;      @name      parse.buffer
+;      @name      parse.reset
 ;      @type      word
-;      @desc      get address of editor buffer
+;      @desc      reset the parsing pointer to the start of the editor buffer
+;				  for scan of new input
 ;
 ; *******************************************************************************
 ; *******************************************************************************
 
-		ex 		de,hl
+		push	hl
 		ld 		hl,editBuffer
+		ld 		(parsePointer),hl
+		pop 	hl
 		ret

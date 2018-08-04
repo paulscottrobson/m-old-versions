@@ -28,7 +28,14 @@ editBufferSize = 512 								; size of edit buffer
 		ds 		4
 editBuffer:											; edit buffer. with a little padding
 		ds 		editBufferSize		
+editBufferEnd:		
 		ds 		4
+
+parsePointer:										; pointer into edit buffer for scanning
+		dw 		0
+
+parsedWord:											; buffer used to hold the parsed word.
+		ds 		32 
 
 DictionaryBase: 									; initial dictionary, which is empty
 		db 		0								

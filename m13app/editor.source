@@ -25,7 +25,7 @@ variable:editor.copy.count
 //
 :editor.mem.pos private
 	push.ab
-	edit.buffer editor.cursor@ +
+	parse.buffer editor.cursor@ +
 	pop.bb
 ;
 //
@@ -49,7 +49,7 @@ variable:editor.copy.count
 :editor.clear 
 	push.ab
 		512 for
-			edit.buffer + $20 swap c!
+			parse.buffer + $20 swap c!
 		next 
 	pop.ab
 ;
@@ -89,8 +89,8 @@ variable:editor.copy.count
 //		Write spaces surrounding the buffer, used for recolour and delete
 //	
 :editor.space.ends private
-	32 edit.buffer 1- c! 							// before
-	edit.buffer editor.size@ + $20 swap c!			// after
+	32 parse.buffer 1- c! 							// before
+	parse.buffer editor.size@ + $20 swap c!			// after
 ;
 //
 //		Backspace
@@ -137,7 +137,7 @@ variable:editor.repaint.direction  					// direction of repaint scan.
 :editor.edit
 	32* editor.size!									// Store size, position and buffer
 	swap 32* editor.position!
-	edit.buffer editor.source!
+	parse.buffer editor.source!
 	begin
 		editor.refresh 									// repaint
 		con.getkey editor.key!							// get key

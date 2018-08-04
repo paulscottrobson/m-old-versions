@@ -3,5 +3,8 @@
 
  testip.load
  4 8 editor.edit
+
+parse.reset parse.fetch con.write.hex
+
 debug halt ;
 

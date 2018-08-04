@@ -45,11 +45,11 @@ variable:testip.colour  									// bits 6,7 drawing colour
 //
 :testip.load 
 	editor.clear 											// clear buffer
-	edit.buffer testip.pointer! 							// reset pointer
+	parse.buffer testip.pointer! 							// reset pointer
 	// ----------------------------------------------------------------------
 	//						Required testing code goes here
 	// ----------------------------------------------------------------------
-	"white_text" ws
+	"__white_text__	" ws
 	"red_text" rs
 	"green_text" gs
 	"yellow_text" ys

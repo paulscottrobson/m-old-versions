@@ -395,9 +395,24 @@ word_def__word_6e_6f_74:
         ld        l,a
         ret
 
-; ***** edit.buffer *****
+; ***** parse.buffer *****
 
-word_def__word_65_64_69_74_2e_62_75_66_66_65_72:
+word_def__word_70_61_72_73_65_2e_62_75_66_66_65_72:
         ex         de,hl
         ld         hl,editBuffer
+        ret
+
+; ***** parse.fetch *****
+
+word_def__word_70_61_72_73_65_2e_66_65_74_63_68:
+        ld             hl,parsedWord
+        ret
+
+; ***** parse.reset *****
+
+word_def__word_70_61_72_73_65_2e_72_65_73_65_74:
+        push    hl
+        ld         hl,editBuffer
+        ld         (parsePointer),hl
+        pop     hl
         ret

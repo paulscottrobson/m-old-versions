@@ -55,7 +55,7 @@
 8152::word::0-
 815a::word::abs
 8160::word::not
-8167::word::edit.buffer
+8167::word::parse.buffer
 8170::word::con.home
 817f::word::con.clear
 8186::word::con.emit.direct
