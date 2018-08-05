@@ -1564,4 +1564,21 @@
 85bb : cd
 85bc : 6c
 85bd : 81
- -- con.write.hex --
+ -- con.print.hex --
+85be : cd
+85bf : 62
+85c0 : 82
+ -- debug --
+85c1 : cd
+85c2 : 0f
+85c3 : 81
+ -- halt --
+85c4 : 76
+85c5 : 18
+85c6 : fd
+ -- ; --
+85c7 : c9
+812d : c7
+812e : 85
+813d : aa
+813e : 85

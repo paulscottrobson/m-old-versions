@@ -30,11 +30,15 @@ def createSNA(prefix):
 def GenerateScripts(prefix):
 	buildCode = """
 		@echo off
+		del /Q core.m13
+		del /Q core.dictionary
+		del /Q build\\{0}.m13
+		del /Q build\\__{0}.sna
 		pushd ..\\core.build
 		call build.bat
 		popd
-		python ..\\compiler\\m13c.py
-		..\\bin\\snasm -zxnext -brk -cur build\\__{0}.asm
+		if exist ..\\compiler\\core.m13 python ..\\compiler\\m13c.py
+		if exist build\\{0}.m13 ..\\bin\\snasm -zxnext -brk -cur build\\__{0}.asm
 	""".format(prefix)
 	buildCode = [x.lstrip() for x in buildCode.split("\n") if x.strip() != ""]
 	h = open("build.bat","w").write("\n".join(buildCode))
@@ -42,7 +46,7 @@ def GenerateScripts(prefix):
 	runCode = """
 		@echo off
 		call build.bat
-		..\\bin\\cspect.exe -zxnext -brk build\\__{0}.sna
+		if exist build\\__{0}.sna ..\\bin\\cspect.exe -zxnext -brk build\\__{0}.sna
 	""".format(prefix)
 	runCode = [x.lstrip() for x in runCode.split("\n") if x.strip() != ""]
 	h = open("run.bat","w").write("\n".join(runCode))

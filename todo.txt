@@ -1,5 +1,4 @@
 TODO:
 	Parsing/Finding words in Z80 ASM write code and test it.
-	Compiler errors break build properly
 	Import dictionary into source
 	Con.VList.

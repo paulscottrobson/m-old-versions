@@ -1,7 +1,7 @@
 
 :main
 	42 con.print.hex
-	con.cr con.cr
+	con.cr con.cr con.cr
 	"hello_world" con.print.string
 debug halt ;
 
