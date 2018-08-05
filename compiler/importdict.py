@@ -32,13 +32,13 @@ class DictionaryWorker(object):
 				self.sysInfo = int(w[:4],16)
 		assert self.sysInfo is not None
 		print("sys.info is at ${0:04x}".format(self.sysInfo))
+		self.dictBase = self.binary[self.sysInfo+4]+self.binary[self.sysInfo+5] * 256
+		print("dictionary is at ${0:04x}".format(self.dictBase))
 	#
 	#		Import dictionary
 	#
 	def importDictionary(self,coreFile,dictFile):
 		self.loadBasic(coreFile,dictFile)
-		self.dictBase = self.binary[self.sysInfo+4]+self.binary[self.sysInfo+5] * 256
-		print("dictionary is at ${0:04x}".format(self.dictBase))
 		p = self.dictBase
 		for w in self.wordList:
 			w = w.split("::")
@@ -63,7 +63,7 @@ class DictionaryWorker(object):
 			self.binary[self.sysInfo + 6 + x * 6] = p & 0xFF			
 			self.binary[self.sysInfo + 7 + x * 6] = p >> 8
 
-		h = open(coreFile+"x","wb")
+		h = open(coreFile,"wb")
 		h.write(bytes(self.binary[0x5B00:0x5B00+self.size]))
 		h.close()
 	#
@@ -76,8 +76,17 @@ class DictionaryWorker(object):
 	#
 	def exportDictionary(self,coreFile,dictFile):
 		self.loadBasic(coreFile,dictFile)
-
+		p = self.dictBase
+		while self.binary[p] != 0:
+			name = self.binary[p+5:p+5+(self.binary[p+4] & 0x1F)]
+			name = [chr((x^0x20)+0x20) for x in name]
+			name = "".join(name).lower()
+			addr = self.binary[p+1] + self.binary[p+2] * 256
+			type = "word" if (self.binary[p+4] & 0x20) == 0 else "var"
+			type = type if (self.binary[p+4] & 0x40) == 0 else "imm"
+			print("Dict at: ${0:04x} Addr:${2:04x} {3:4} {1}".format(p,name,addr,type))
+			p += self.binary[p]
 
 
 DictionaryWorker().importDictionary("core.m13","core.dictionary")
-DictionaryWorker().exportDictionary("core.m13x","core.dictionary")
+DictionaryWorker().exportDictionary("core.m13","core.dictionary")
