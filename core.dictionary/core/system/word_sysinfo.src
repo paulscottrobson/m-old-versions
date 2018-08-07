@@ -3,13 +3,14 @@
 ;
 ;      @name      sys.info
 ;      @type      word
-;      @desc      get address of data area, as sys.info& only
+;      @desc      get address of data area
 ;
 ; *******************************************************************************
 ; *******************************************************************************
-	
-		ret
-		db 		0,0,0 								; filler
+
+__sysInfo:
+		jr 		__sysInfoExecute
+		org 	__sysInfo+4	
 
 SIDictionaryBase:									
 		dw 		DictionaryBase 						; +4,+5 start of dictionary					
@@ -48,4 +49,9 @@ SIRuntimeAddress:
 SIStack:									
 		dw 		StackTop							; +26,+27 initial stack value
 
+
+__sysInfoExecute:
+		ex 		de,hl
+		ld 		hl,__sysInfo
 		ret
+

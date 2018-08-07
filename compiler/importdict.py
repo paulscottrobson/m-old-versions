@@ -87,6 +87,5 @@ class DictionaryWorker(object):
 			print("Dict at: ${0:04x} Addr:${2:04x} {3:4} {1}".format(p,name,addr,type))
 			p += self.binary[p]
 
-
-DictionaryWorker().importDictionary("core.m13","core.dictionary")
-DictionaryWorker().exportDictionary("core.m13","core.dictionary")
+DictionaryWorker().importDictionary("build\\m13app.m13","build\\m13app.dictionary")
+#DictionaryWorker().exportDictionary("core.m13","core.dictionary")

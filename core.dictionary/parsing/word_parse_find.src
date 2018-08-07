@@ -1,0 +1,66 @@
+; *******************************************************************************
+; *******************************************************************************
+;
+;      @name      parse.find
+;      @type      word
+;      @desc      find the word at A in the dictionary, return address of word
+;				  entry (not routine !) or zero if not found.
+;
+; *******************************************************************************
+; *******************************************************************************
+	
+		push 	de
+		push 	hl
+		push 	ix		
+		ld 		(pfi_testWord),hl						; save address of checked word.
+		ld 		hl,$0000 								; clear result
+		ld 		(pfi_testResult),hl
+		ld 		ix,(SIDictionaryBase) 					; start with dictionary base
+pfi_MainLoop:
+		ld 		a,(ix+0) 								; reached the end (offset == 0)
+		or 		a
+		jr 		z,pfi_Exit
+		ld 		hl,(pfi_testWord) 						; word to check against
+		ld 		a,(ix+4) 								; read length of dictionary word
+		and 	$1F
+		cp 		(hl) 									; same as length of checking word.
+		call 	z,pfi_TestText
+		ld 		c,(ix+0) 								; BC is offset to next
+		ld 		b,0
+		add 	ix,bc
+		jr 		pfi_MainLoop
+pfi_Exit:
+		pop 	ix 										; restore IX and exit with result.
+		pop 	hl
+		pop 	de
+		ld 		hl,(pfi_testResult)						; unary op so A->A
+		ret
+
+pfi_TestText:
+		ld 		b,(hl) 									; put count to check into B
+		push 	ix 										; put address of entry into DE
+		pop 	de
+		inc 	de 										; point to fourth offset (e.g. one short)
+		inc		de
+		inc 	de
+		inc 	de
+pfi_TestLoop:
+		inc 	de 										; bump both pointers
+		inc 	hl
+		ld 		a,(hl) 									; get byte from buffer
+		and 	$3F 									; only interested in lower 6 bits
+		ld 		c,a
+		ld 		a,(de) 									; get byte from dictionary
+		cp 		c 										; are they the same
+		ret 	nz 										; exit if false
+		djnz 	pfi_TestLoop 							; do required number of word times.
+		ld 		(pfi_testResult),ix 					; all done update result.
+		ret
+
+pfi_testWord:											; word being checked
+		dw 		0 
+pfi_testResult:											; final result
+		dw 		0
+
+		ret
+		

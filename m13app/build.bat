@@ -7,4 +7,5 @@ pushd ..\core.build
 call build.bat
 popd
 if exist ..\compiler\core.m13 python ..\compiler\m13c.py
+if exist build\m13app.m13 python ..\compiler\importdict.py
 if exist build\m13app.m13 ..\bin\snasm -zxnext -brk -cur build\__m13app.asm

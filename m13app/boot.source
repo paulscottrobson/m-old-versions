@@ -1,10 +1,14 @@
 
 :main
 
+con.vlist
+
  testip.load
- 4 8 editor.edit
+ 16 8 editor.edit
 
-parse.reset parse.fetch con.print.hex
-
+parse.reset 
+5 for
+parse.fetch con.print.string con.space parse.find con.print.hex con.cr
+next
 debug halt ;
 

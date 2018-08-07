@@ -139,6 +139,26 @@ variable:con.colour  						// current colour in bits 6 and 7
 //							List Dictionary to console
 // *****************************************************************************
 
-:con.vlist
+:con.vlist.show private
+	push.ab
+	4 + a>r c@ $1F and r>a swap			// point to length, save it, get length to A, lengthAddr to B
+	for 								// for each character
+		b>a 1+ a>b c@ con.emit 			// bump B, read and print char
+	next con.space						// trailing space
+	pop.ab 
+;
+
+:con.vlist.main private
+	sys.info 4 + @ swap					// Get address of first byte of dictionary into B
+	begin 								// No while.	
+		b>a c@ 0= if con.cr ; then 		// Put into B, get offset, exit if zero.
+		b>a con.vlist.show 				// Display info
+		c@ + false 						// Get next address, loop back in B
+	until
 ;
 	
+:con.vlist 
+	push.ab
+	con.vlist.main
+	pop.ab
+;

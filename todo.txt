@@ -1,4 +1,2 @@
 TODO:
-	Parsing/Finding words in Z80 ASM write code and test it.
-	Import dictionary into source
-	Con.VList.
+	Import dictionary  make into a proper application.

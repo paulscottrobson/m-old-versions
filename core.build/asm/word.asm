@@ -317,8 +317,9 @@ MacroExpander:
 ; ***** sys.info *****
 
 word_def__word_73_79_73_2e_69_6e_66_6f:
-        ret
-        db         0,0,0                                 ; filler
+__sysInfo:
+        jr         __sysInfoExecute
+        org     __sysInfo+4
 SIDictionaryBase:
         dw         DictionaryBase                         ; +4,+5 start of dictionary
 SIDictionaryNextFree:
@@ -343,6 +344,9 @@ SIRuntimeAddress:
         dw         HaltProcessor                         ; +24,+25 run address of program.
 SIStack:
         dw         StackTop                            ; +26,+27 initial stack value
+__sysInfoExecute:
+        ex         de,hl
+        ld         hl,__sysInfo
         ret
 
 ; ***** 0= *****
@@ -405,7 +409,106 @@ word_def__word_70_61_72_73_65_2e_62_75_66_66_65_72:
 ; ***** parse.fetch *****
 
 word_def__word_70_61_72_73_65_2e_66_65_74_63_68:
-        ld             hl,parsedWord
+        xor     a                                         ; empty the parsed word buffer
+        ld         (parsedWord),a                             ; now contains a NULL string.
+        ex         de,hl                                     ; it's a loader so A->B first.
+pf_SkipSpaces:
+        call    pf_GetCharacter                         ; read character
+        ld         hl,0                                     ; return 0 if CS e.g. reached buffer end.
+        ret     c
+        ld         b,a                                     ; save it temp.
+        and     $3F                                     ; if space
+        cp        ' '
+        jr         z,pf_SkipSpaces                         ; go back.
+        ld         hl,parsedWord+1                         ; HL now points to current word.
+pf_WriteCharacter:
+        ld         (hl),b                                     ; write word out.
+        inc     hl
+        ld         a,(parsedWord)                            ; increment the count
+        inc     a
+        ld         (parsedWord),a
+        call     pf_GetCharacter                         ; get the next
+        jr         c,pf_Exit                                 ; exit if CS (end of buffer)
+        ld         b,a                                     ; save in B
+        and     $3F                                     ; go back if not space
+        cp         ' '
+        jr         nz,pf_WriteCharacter
+pf_Exit:
+        ld         hl,parsedWord                             ; return A = parsedWord
+        ret
+pf_GetCharacter:
+        push     hl
+        ld         hl,(parsePointer)                        ; get current pointer
+        ld         a,l                                     ; check if not reached buffer end.
+        cp         editBufferEnd & 0xFF
+        jr         nz,pf_NotEndBuffer
+        ld         a,h
+        cp         editBufferEnd / 256
+        jr         nz,pf_NotEndBuffer
+        pop     hl                                         ; reached end of buffer
+        scf                                             ; so return with CS
+        ret
+pf_NotendBuffer:
+        xor     a                                         ; clears carry
+        ld         a,(hl)                                     ; read character
+        inc     hl                                         ; bump pointer and write back
+        ld         (parsePointer),hl
+        pop     hl                                         ; restore HL
+        ret
+
+; ***** parse.find *****
+
+word_def__word_70_61_72_73_65_2e_66_69_6e_64:
+        push     de
+        push     hl
+        push     ix
+        ld         (pfi_testWord),hl                        ; save address of checked word.
+        ld         hl,$0000                                 ; clear result
+        ld         (pfi_testResult),hl
+        ld         ix,(SIDictionaryBase)                     ; start with dictionary base
+pfi_MainLoop:
+        ld         a,(ix+0)                                 ; reached the end (offset == 0)
+        or         a
+        jr         z,pfi_Exit
+        ld         hl,(pfi_testWord)                         ; word to check against
+        ld         a,(ix+4)                                 ; read length of dictionary word
+        and     $1F
+        cp         (hl)                                     ; same as length of checking word.
+        call     z,pfi_TestText
+        ld         c,(ix+0)                                 ; BC is offset to next
+        ld         b,0
+        add     ix,bc
+        jr         pfi_MainLoop
+pfi_Exit:
+        pop     ix                                         ; restore IX and exit with result.
+        pop     hl
+        pop     de
+        ld         hl,(pfi_testResult)                        ; unary op so A->A
+        ret
+pfi_TestText:
+        ld         b,(hl)                                     ; put count to check into B
+        push     ix                                         ; put address of entry into DE
+        pop     de
+        inc     de                                         ; point to fourth offset (e.g. one short)
+        inc        de
+        inc     de
+        inc     de
+pfi_TestLoop:
+        inc     de                                         ; bump both pointers
+        inc     hl
+        ld         a,(hl)                                     ; get byte from buffer
+        and     $3F                                     ; only interested in lower 6 bits
+        ld         c,a
+        ld         a,(de)                                     ; get byte from dictionary
+        cp         c                                         ; are they the same
+        ret     nz                                         ; exit if false
+        djnz     pfi_TestLoop                             ; do required number of word times.
+        ld         (pfi_testResult),ix                     ; all done update result.
+        ret
+pfi_testWord:                                            ; word being checked
+        dw         0
+pfi_testResult:                                            ; final result
+        dw         0
         ret
 
 ; ***** parse.reset *****

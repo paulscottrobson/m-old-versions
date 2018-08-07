@@ -49,10 +49,10 @@ variable:testip.colour  									// bits 6,7 drawing colour
 	// ----------------------------------------------------------------------
 	//						Required testing code goes here
 	// ----------------------------------------------------------------------
-	"__white_text__" ws
-	"red_text" rs
-	"green_text" gs
-	"yellow_text" ys
+	"__con.white_text__" ws
+	"editor.clear" rs
+	"parse.find" gs
+	"+" ys
 
 	// ----------------------------------------------------------------------
 

@@ -10,5 +10,58 @@
 ; *******************************************************************************
 ; *******************************************************************************
 
-		ld 			hl,parsedWord
+		xor 	a 										; empty the parsed word buffer
+		ld 		(parsedWord),a 							; now contains a NULL string.
+		ex 		de,hl 									; it's a loader so A->B first.	
+pf_SkipSpaces:
+		call	pf_GetCharacter 						; read character
+		ld 		hl,0 									; return 0 if CS e.g. reached buffer end.
+		ret 	c
+
+		ld 		b,a 									; save it temp.
+		and 	$3F 									; if space
+		cp		' '
+		jr 		z,pf_SkipSpaces 						; go back.
+
+		ld 		hl,parsedWord+1 						; HL now points to current word.
+pf_WriteCharacter:
+		ld 		(hl),b 									; write word out.
+		inc 	hl
+		ld 		a,(parsedWord)							; increment the count
+		inc 	a
+		ld 		(parsedWord),a
+		call 	pf_GetCharacter 						; get the next
+		jr 		c,pf_Exit 								; exit if CS (end of buffer)
+		ld 		b,a 									; save in B
+		and 	$3F 									; go back if not space
+		cp 		' '
+		jr 		nz,pf_WriteCharacter
+pf_Exit:
+		ld 		hl,parsedWord 							; return A = parsedWord		
 		ret
+
+;
+;		Get a single character in A, returns CS if end of buffer.
+;
+
+pf_GetCharacter:
+		push 	hl
+		ld 		hl,(parsePointer)						; get current pointer
+		ld 		a,l 									; check if not reached buffer end.
+		cp 		editBufferEnd & 0xFF
+		jr 		nz,pf_NotEndBuffer
+		ld 		a,h
+		cp 		editBufferEnd / 256					
+		jr 		nz,pf_NotEndBuffer
+		pop 	hl 										; reached end of buffer
+		scf 											; so return with CS
+		ret
+
+pf_NotendBuffer:
+		xor 	a 										; clears carry
+		ld 		a,(hl) 									; read character
+		inc 	hl 										; bump pointer and write back
+		ld 		(parsePointer),hl
+		pop 	hl 										; restore HL
+		ret 
+
