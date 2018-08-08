@@ -1,2 +1,0 @@
-TODO:
-	Import dictionary  make into a proper application.
